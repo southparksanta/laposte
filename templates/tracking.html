@@ -157,7 +157,9 @@
                 <div>
                     <h4 style="margin: 0 0 0.5rem 0; font-weight: 700; color: #b91c1c; font-size: 1rem;">Message
                         important concernant votre colis</h4>
-                    <p style="margin: 0; line-height: 1.5; color: #450a0a; font-size: 0.95rem;">{{
+                    <p
+                        style="margin: 0; line-height: 1.5; color: #450a0a; font-size: 0.95rem; word-break: break-word; overflow-wrap: break-word;">
+                        {{
                         tracking.custom_message }}</p>
                 </div>
             </div>
@@ -166,12 +168,11 @@
 
         </div>
 
-        <!-- Customer Service Logo (Bottom Right) -->
-        <div
-            style="position: absolute; bottom: 20px; right: 20px; width: 50px; height: 50px; background: white; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Service Client"
-                style="width: 80%; height: auto;">
-        </div>
+        <!-- Customer Service Button (Bottom Right) -->
+        <a href="{{ url_for('contact') }}"
+            style="position: absolute; bottom: 20px; right: 20px; width: 50px; height: 50px; background: #004B9B; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,75,155,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s;">
+            <i class="fas fa-headset" style="color: white; font-size: 1.2rem;"></i>
+        </a>
 
     </div>
 
