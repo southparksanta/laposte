@@ -870,7 +870,53 @@ a {
         /* Override large padding */
         width: auto !important;
     }
-}
+
+    /* Hero Fixes */
+    .hero-section {
+        padding: 2rem 1rem 4rem;
+        min-height: auto;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Header Fixes */
+    .header-container {
+        padding: 0 10px;
+        gap: 5px;
+    }
+
+    .main-nav ul {
+        gap: 10px;
+    }
+
+    /* Compact Account Button */
+    .btn-account {
+        padding: 0;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        min-width: 36px;
+    }
+
+    .btn-account span {
+        display: none;
+    }
+
+    .btn-account i {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    /* Adjust Dropdown Position */
+    .user-dropdown {
+        margin-left: 5px;
+    }
 }
 
 .user-name {
