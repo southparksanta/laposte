@@ -918,6 +918,27 @@ a {
         margin-left: 5px;
     }
 
+    /* Compact User Button (Logged In) */
+    .user-btn {
+        padding: 0 !important;
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 50% !important;
+        justify-content: center;
+        gap: 0 !important;
+    }
+
+    .user-btn .user-name,
+    .user-btn .toggle-icon {
+        display: none !important;
+    }
+
+    .user-btn .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
     /* Tracking Page Fixes */
     .container.mobile-padding {
         padding-top: 2rem !important;

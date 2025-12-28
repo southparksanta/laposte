@@ -80,8 +80,8 @@
                     </div>
                 </div>
                 {% else %}
-                <a href="{{ url_for('login') }}" class="btn-account"><i class="fas fa-user"></i> {{
-                    get_text('nav_client') }}</a>
+                <a href="{{ url_for('login') }}" class="btn-account"><i class="fas fa-user"></i> <span>{{
+                        get_text('nav_client') }}</span></a>
                 {% endif %}
             </div>
         </div>
