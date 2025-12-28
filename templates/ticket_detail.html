@@ -62,10 +62,10 @@
         <!-- Reply Box -->
         <div class="card" style="position: sticky; bottom: 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05);">
             <form method="POST">
-                <div style="display: flex; gap: 1rem;">
+                <div class="chat-input-container" style="display: flex; gap: 1rem;">
                     <textarea name="message" required placeholder="{{ get_text('ticket_reply_ph') }}" rows="2"
                         style="flex: 1; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: none;"></textarea>
-                    <button type="submit" class="btn-search"
+                    <button type="submit" class="btn-search chat-send-btn"
                         style="border: none; cursor: pointer; height: auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-paper-plane"></i>
                     </button>

@@ -800,6 +800,79 @@ a {
     font-size: 0.9rem;
 }
 
+/* Mobile Responsiveness Helper Classes */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: table;
+    /* Default for tables */
+}
+
+/* My Tickets Mobile Cards */
+.mobile-ticket-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+}
+
+.mobile-ticket-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.mobile-ticket-card .ticket-subject {
+    font-weight: 700;
+    color: #334155;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.mobile-ticket-card .ticket-date {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.mobile-ticket-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Mobile Media Query */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* Ticket Detail / Chat Fixes */
+    .chat-input-container {
+        flex-direction: row;
+        /* Keep row */
+    }
+
+    .chat-send-btn {
+        padding: 0 1.5rem !important;
+        /* Override large padding */
+        width: auto !important;
+    }
+}
+}
+
 .user-name {
     font-weight: 600;
     font-size: 0.95rem;
