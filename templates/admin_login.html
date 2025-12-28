@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card admin-login-box">
+        <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">Connexion Administration</h2>
+
+        <form action="{{ url_for('admin_login') }}" method="POST">
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Identifiant</label>
+                <input type="text" name="username" class="input-field" style="width: 100%;" required>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Mot de passe</label>
+                <input type="password" name="password" class="input-field" style="width: 100%;" required>
+            </div>
+            <button type="submit" class="btn-search"
+                style="width: 100%; background-color: var(--primary-color); color: white;">Se connecter</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

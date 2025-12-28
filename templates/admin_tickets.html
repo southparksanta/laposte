@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: #f4f6f9; min-height: 100vh; padding-bottom: 4rem;">
+
+    <!-- Admin Header -->
+    <div style="background: white; padding: 2rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 2rem;">
+        <div class="container"
+            style="max-width: 95%; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.5rem;">Tickets Support</h1>
+                <p style="color: #666; margin: 0;">Gestion des demandes de contact client.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ url_for('dashboard') }}" class="btn-account"
+                    style="background: var(--primary-light); color: white;">
+                    <i class="fas fa-box"></i> Gestion Suivis
+                </a>
+                <a href="{{ url_for('logout') }}" class="btn-account"
+                    style="background: #ffebee; color: #c62828; border: 1px solid #ffcdd2;">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="container" style="max-width: 95%;">
+
+        <div class="card"
+            style="padding: 0; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 100%;">
+            <div
+                style="padding: 1.5rem; border-bottom: 1px solid #eee; background: white; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: var(--primary-color);">Derniers Messages</h3>
+                <span
+                    style="background: var(--primary-light); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">
+                    {{ messages|length }} Tickets
+                </span>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="dashboard-table" style="width: 100%; min-width: 800px;">
+                    <thead style="background: #f8fafc;">
+                        <tr>
+                            <th
+                                style="padding: 1.2rem; text-transform: uppercase; font-size: 0.75rem; color: #64748b; font-weight: 700;">
+                                Date</th>
+                            <th
+                                style="padding: 1.2rem; text-transform: uppercase; font-size: 0.75rem; color: #64748b; font-weight: 700;">
+                                Client</th>
+                            <th
+                                style="padding: 1.2rem; text-transform: uppercase; font-size: 0.75rem; color: #64748b; font-weight: 700;">
+                                Sujet</th>
+                            <th
+                                style="padding: 1.2rem; text-transform: uppercase; font-size: 0.75rem; color: #64748b; font-weight: 700;">
+                                Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in messages %}
+                        <tr style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"
+                            onclick="window.location='{{ url_for('admin_ticket_detail', id=m.id) }}'">
+                            <td style="padding: 1.2rem; white-space: nowrap; color: #64748b; font-size: 0.85rem;">
+                                {{ m.timestamp.strftime('%d/%m/%Y %H:%M') }}
+                            </td>
+                            <td style="padding: 1.2rem;">
+                                <div style="font-weight: 600; color: #334155;">{{ m.name }}</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">{{ m.email }}</div>
+                            </td>
+                            <td style="padding: 1.2rem; font-weight: 600; color: var(--primary-color);">
+                                {{ m.subject }}
+                            </td>
+                            <td style="padding: 1.2rem; color: #475569; font-size: 0.9rem; max-width: 400px;">
+                                {{ m.message }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 3rem; color: #94a3b8;">
+                                <i class="fas fa-inbox"
+                                    style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                                Aucun message reçu.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mobile-padding" style="padding-top: 100px; padding-bottom: 5rem;">
+
+    <!-- Tracking Card -->
+    <div class="card"
+        style="max-width: 600px; margin: 0 auto; overflow: hidden; padding: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-radius: 20px; position: relative;">
+
+        <div style="padding: 2.5rem 2rem;">
+
+            <!-- Header Title -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <!-- Robot Help Section (Linked to Contact) -->
+                <div style="margin-bottom: 2rem;">
+                    <a href="{{ url_for('contact') }}" style="text-decoration: none; display: inline-block;">
+                        <div
+                            style="display: inline-flex; align-items: center; gap: 10px; background: #fff; padding: 10px 20px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s;">
+                            <span style="font-size: 0.95rem; color: #334155; font-weight: 600;">{{ get_text('help_text')
+                                }}</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Tracking Number -->
+                <h1 style="color: #1e293b; font-weight: 800; font-size: 1.8rem; margin: 0;">
+                    {{ get_text('tracking_title') }} {{ tracking.code }}
+                </h1>
+
+                <!-- Rename Button (Visual) -->
+                <div style="margin-top: 1rem;">
+                    <button id="renameBtn" onclick="renameTracking()"
+                        style="background: transparent; border: 1px solid #2563eb; color: #2563eb; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        {{ get_text('tracking_rename') }} <i class="fas fa-pen" style="font-size: 0.8rem;"></i>
+                    </button>
+                    <script>
+                        function renameTracking() {
+                            const newName = prompt("{{ get_text('tracking_rename') }} :");
+                            if (newName) {
+                                document.getElementById('renameBtn').innerHTML = newName + ' <i class="fas fa-pen" style="font-size: 0.8rem;"></i>';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <!-- Removed Search Section -->
+
+            <!-- Vertical Timeline -->
+            <div class="vertical-timeline" style="position: relative; padding-left: 10px;">
+
+                {% set current_step = 1 %}
+                {% if tracking.step4_date != '--/--/----' %}
+                {% set current_step = 4 %}
+                {% elif tracking.step3_date != '--/--/----' %}
+                {% set current_step = 3 %}
+                {% elif tracking.step2_date != '--/--/----' %}
+                {% set current_step = 2 %}
+                {% endif %}
+
+                <!-- Step 1 (Prise en charge) -->
+                <div class="timeline-step" style="display: flex; gap: 1rem; margin-bottom: 2rem; position: relative;">
+                    <div class="timeline-line"
+                        style="position: absolute; left: 14px; top: 30px; bottom: -35px; width: 2px; background-color: #e2e8f0;">
+                    </div>
+                    <div class="timeline-icon"
+                        style="min-width: 30px; height: 30px; 
+                               background-color: {{ '#22c55e' if current_step > 1 else '#2563eb' if current_step == 1 else '#cbd5e1' }}; 
+                               border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        <i class="fas fa-box" style="color: white; font-size: 0.8rem;"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div style="font-weight: 700; color: #1e293b; font-size: 1.05rem;">{{ tracking.step1_label }}
+                        </div>
+                        <div style="color: #64748b; font-size: 0.95rem;">{{ tracking.step1_date }} - {{
+                            tracking.step1_loc }}</div>
+                    </div>
+                </div>
+
+                <!-- Step 2 (Transit) - Requested Truck Icon -->
+                <div class="timeline-step" style="display: flex; gap: 1rem; margin-bottom: 2rem; position: relative;">
+                    <div class="timeline-line"
+                        style="position: absolute; left: 14px; top: 30px; bottom: -35px; width: 2px; background-color: #e2e8f0;">
+                    </div>
+                    <div class="timeline-icon"
+                        style="min-width: 30px; height: 30px; 
+                               background-color: {{ '#22c55e' if current_step > 2 else '#2563eb' if current_step == 2 else '#cbd5e1' }}; 
+                               border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        <i class="fas fa-truck" style="color: white; font-size: 0.8rem;"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div
+                            style="font-weight: 700; color: {{ '#1e293b' if current_step >= 2 else '#94a3b8' }}; font-size: 1.05rem;">
+                            {{ tracking.step2_label }}</div>
+                        <div style="color: {{ '#64748b' if current_step >= 2 else '#cbd5e1' }}; font-size: 0.95rem;">{{
+                            tracking.step2_date }} - {{ tracking.step2_loc }}</div>
+                    </div>
+                </div>
+
+                <!-- Step 3 (Ville d'expédition) -->
+                <div class="timeline-step" style="display: flex; gap: 1rem; margin-bottom: 2rem; position: relative;">
+                    <div class="timeline-line"
+                        style="position: absolute; left: 14px; top: 30px; bottom: -35px; width: 2px; background-color: #e2e8f0;">
+                    </div>
+                    <div class="timeline-icon"
+                        style="min-width: 30px; height: 30px; 
+                               background-color: {{ '#22c55e' if current_step > 3 else '#2563eb' if current_step == 3 else '#cbd5e1' }}; 
+                               border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        <i class="fas fa-city" style="color: white; font-size: 0.8rem;"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div
+                            style="font-weight: 700; color: {{ '#1e293b' if current_step >= 3 else '#94a3b8' }}; font-size: 1.05rem;">
+                            {{ tracking.step3_label }}</div>
+                        <div style="color: {{ '#64748b' if current_step >= 3 else '#cbd5e1' }}; font-size: 0.95rem;">{{
+                            tracking.step3_date }} - {{ tracking.step3_loc }}</div>
+                    </div>
+                </div>
+
+                <!-- Step 4 (Livraison) -->
+                <div class="timeline-step" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; position: relative;">
+                    <div class="timeline-icon"
+                        style="min-width: 30px; height: 30px; 
+                               background-color: {{ '#22c55e' if current_step == 4 else '#cbd5e1' }}; 
+                               border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        <i class="fas fa-user-check" style="color: white; font-size: 0.8rem;"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div
+                            style="font-weight: 700; color: {{ '#1e293b' if current_step == 4 else '#94a3b8' }}; font-size: 1.05rem;">
+                            {{ tracking.step4_label }}</div>
+                        <div style="color: {{ '#64748b' if current_step == 4 else '#cbd5e1' }}; font-size: 0.95rem;">{{
+                            tracking.step4_date }} - {{ tracking.step4_loc }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar Frame -->
+            <div style="margin-bottom: 2.5rem;">
+                <!-- Calculate width: 1=25%, 2=50%, 3=75%, 4=100% -->
+                {% set progress_width = (current_step / 4) * 100 %}
+                <div
+                    style="height: 8px; background-color: #e2e8f0; border-radius: 4px; overflow: hidden; display: flex;">
+                    <div
+                        style="width: {{ progress_width }}%; background-color: #22c55e; height: 100%; border-radius: 4px; transition: width 0.5s ease;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Message Alert -->
+            {% if tracking.custom_message %}
+            <div class="msg-box"
+                style="background: #fef2f2; border: 1px solid #fee2e2; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="min-width: 24px; color: #ef4444; font-size: 1.2rem; margin-top: 2px;">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0 0 0.5rem 0; font-weight: 700; color: #b91c1c; font-size: 1rem;">Message
+                        important concernant votre colis</h4>
+                    <p style="margin: 0; line-height: 1.5; color: #450a0a; font-size: 0.95rem;">{{
+                        tracking.custom_message }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+
+        </div>
+
+        <!-- Customer Service Logo (Bottom Right) -->
+        <div
+            style="position: absolute; bottom: 20px; right: 20px; width: 50px; height: 50px; background: white; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Service Client"
+                style="width: 80%; height: auto;">
+        </div>
+
+    </div>
+
+
+    <!-- Customer Service Button Removed as requested -->
+
+</div>
+{% endblock %}

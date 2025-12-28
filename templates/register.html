@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+    <div class="card" style="max-width: 450px; margin: 0 auto;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-dark);">{{ get_text('register_title')
+            }}</h2>
+
+        <form action="{{ url_for('register') }}" method="POST">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ get_text('login_id')
+                    }}</label>
+                <input type="text" name="username" class="input-field" style="width: 100%;" required>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ get_text('login_pass')
+                    }}</label>
+                <input type="password" name="password" class="input-field" style="width: 100%;" required>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Confirmer le mot de
+                    passe</label>
+                <input type="password" name="confirm_password" class="input-field" style="width: 100%;" required>
+            </div>
+
+            <div class="info-item" style="margin-bottom: 2rem; background: #e3f2fd; font-size: 0.9rem; border: none;">
+                <i class="fas fa-info-circle"></i>
+                En créant un compte, vous acceptez nos CGV.
+            </div>
+
+            <button type="submit" class="btn-search"
+                style="width: 100%; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; border: none; padding: 12px; font-size: 1.1rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                {{ get_text('register_btn') }}
+            </button>
+        </form>
+
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="{{ url_for('login') }}" style="color: #666; text-decoration: none;">{{ get_text('register_already')
+                }} {{ get_text('nav_login') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

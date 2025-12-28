@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem; max-width: 900px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="color: var(--primary-dark); font-size: 1.8rem;">{{ get_text('tickets_title') }}</h1>
+        <a href="{{ url_for('contact') }}" class="btn-account">
+            <i class="fas fa-plus"></i> {{ get_text('tickets_new') }}
+        </a>
+    </div>
+
+    <!-- Ticket List -->
+    <div class="card" style="padding: 0; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <tr>
+                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; color: #64748b; font-weight: 600;">
+                        {{ get_text('tickets_date') }}</th>
+                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; color: #64748b; font-weight: 600;">
+                        {{ get_text('tickets_subject') }}</th>
+                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; color: #64748b; font-weight: 600;">
+                        {{ get_text('tickets_status') }}</th>
+                    <th style="padding: 1rem; text-align: right; font-size: 0.85rem; color: #64748b; font-weight: 600;">
+                        {{ get_text('tickets_action') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 1rem; font-size: 0.9rem; color: #475569;">{{
+                        ticket.timestamp.strftime('%d/%m/%Y') }}</td>
+                    <td style="padding: 1rem; font-weight: 600; color: #334155;">{{ ticket.subject }}</td>
+                    <td style="padding: 1rem;">
+                        <!-- Translate status -->
+                        {% set status_key = 'status_pending' if 'Open' in ticket.status else 'status_delivered' if
+                        'Closed' in ticket.status else '' %}
+                        <span style="padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; 
+                            background: {% if ticket.status == 'Open' %}#dbeafe{% else %}#f1f5f9{% endif %};
+                            color: {% if ticket.status == 'Open' %}#1e40af{% else %}#64748b{% endif %};">
+                            {{ get_text('status_pending') if ticket.status == 'Open' else ticket.status }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem; text-align: right;">
+                        <a href="{{ url_for('ticket_detail', id=ticket.id) }}"
+                            style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                            {{ get_text('tickets_view') }} <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 3rem; color: #94a3b8;">
+                        {{ get_text('tickets_none') }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

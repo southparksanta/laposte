@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+    <div class="card" style="max-width: 450px; margin: 0 auto; box-shadow: var(--shadow-hover);">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-dark);">{{ get_text('login_title') }}
+        </h2>
+
+        <form action="{{ url_for('login') }}" method="POST">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ get_text('login_id')
+                    }}</label>
+                <input type="text" name="username" class="input-field" style="width: 100%;" required>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ get_text('login_pass')
+                    }}</label>
+                <input type="password" name="password" class="input-field" style="width: 100%;" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%;">{{ get_text('login_btn') }}</button>
+        </form>
+
+        <div style="margin-top: 2rem; text-align: center; border-top: 1px solid #eee; padding-top: 1.5rem;">
+            <p style="color: #666; margin-bottom: 1rem;">{{ get_text('login_new') }}</p>
+            <a href="{{ url_for('register') }}"
+                style="color: var(--primary-color); font-weight: 700; text-decoration: none;">{{
+                get_text('login_create') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

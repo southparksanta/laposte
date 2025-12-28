@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-wrapper" style="background-color: #f8fafc; min-height: 100vh; padding-bottom: 4rem;">
+
+    <!-- Sub-Header / Control Bar -->
+    <div class="control-bar">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="title-section">
+                <h1 class="page-title">Tableau de bord</h1>
+                <p class="subtitle">Gestion des expéditions & suivis</p>
+            </div>
+
+            <div class="actions">
+                <span class="badge-count">
+                    <i class="fas fa-box"></i> {{ tracking_list|length }} Dossiers
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container main-content-area">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-messages-area">
+            {% for message in messages %}
+            <div class="custom-alert">
+                <i class="fas fa-check-circle"></i> {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Tracking List -->
+        <div class="tracking-list">
+            {% for t in tracking_list %}
+            <form method="POST" action="{{ url_for('update_status', id=t.id) }}" class="tracking-card">
+
+                <!-- Card Header: Code & Main Status -->
+                <div class="card-header-row">
+                    <div class="tracking-id">
+                        <a href="{{ url_for('track_result', code=t.code) }}" target="_blank"
+                            title="Voir le suivi public">
+                            <i class="fas fa-barcode"></i> {{ t.code }}
+                        </a>
+                    </div>
+
+                    <div class="main-status-inputs">
+                        <div class="input-group">
+                            <i class="fas fa-info-circle icon-input"></i>
+                            <input type="text" name="status" value="{{ t.status }}" class="clean-input"
+                                placeholder="Statut (ex: En cours)">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-map-marker-alt icon-input"></i>
+                            <input type="text" name="location" value="{{ t.location }}" class="clean-input"
+                                placeholder="Lieu actuel">
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button type="submit" class="btn-save" title="Enregistrer les modifications">
+                            <i class="fas fa-save"></i>
+                            <span>Enregistrer</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-divider"></div>
+
+                <!-- Card Body: History & Alerts -->
+                <div class="card-body-row">
+
+                    <!-- Progress Control Slider -->
+                    <div
+                        style="margin-bottom: 2rem; padding: 1.5rem; background: #eff6ff; border-radius: 12px; border: 1px solid #dbeafe;">
+                        <label
+                            style="display: block; font-weight: 700; color: #1e40af; margin-bottom: 1rem; display: flex; justify-content: space-between;">
+                            <span>Progression du colis (Déplacez le curseur)</span>
+                            <span id="slider-val-{{ t.id }}"
+                                style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem;">
+                                {% if t.step4_date != '--/--/----' %}Etape 4{% elif t.step3_date != '--/--/----' %}Etape
+                                3{% elif t.step2_date != '--/--/----' %}Etape 2{% elif t.step1_date != '--/--/----'
+                                %}Etape 1{% else %}Non traité{% endif %}
+                            </span>
+                        </label>
+
+                        {% set current_level = 4 if t.step4_date != '--/--/----' else 3 if t.step3_date != '--/--/----'
+                        else 2 if t.step2_date != '--/--/----' else 1 if t.step1_date != '--/--/----' else 0 %}
+
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-size: 0.8rem; color: #64748b; font-weight: 600;">0</span>
+                            <input type="range" name="progress_level" min="0" max="4" value="{{ current_level }}"
+                                style="flex: 1; cursor: pointer;" oninput="updateSliderLabel(this, '{{ t.id }}')">
+                            <span style="font-size: 0.8rem; color: #64748b; font-weight: 600;">4</span>
+                        </div>
+                    </div>
+
+                    <!-- History Column -->
+                    <div class="history-section">
+                        <h4 class="section-label">Historique d'acheminement (Détails)</h4>
+
+                        <!-- Step 4 (Latest) -->
+                        <div class="history-step">
+                            <div class="step-indicator">4</div>
+                            <div class="step-inputs">
+                                <input type="text" name="step4_label" value="{{ t.step4_label }}"
+                                    class="mini-input label-input" placeholder="Etape 4 (Label)">
+                                <div class="step-details">
+                                    <input type="text" name="step4_date" value="{{ t.step4_date }}"
+                                        class="mini-input date-input" placeholder="Date">
+                                    <input type="text" name="step4_loc" value="{{ t.step4_loc }}"
+                                        class="mini-input loc-input" placeholder="Lieu">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="history-step">
+                            <div class="step-indicator">3</div>
+                            <div class="step-inputs">
+                                <input type="text" name="step3_label" value="{{ t.step3_label }}"
+                                    class="mini-input label-input" placeholder="Etape 3 (Label)">
+                                <div class="step-details">
+                                    <input type="text" name="step3_date" value="{{ t.step3_date }}"
+                                        class="mini-input date-input" placeholder="Date">
+                                    <input type="text" name="step3_loc" value="{{ t.step3_loc }}"
+                                        class="mini-input loc-input" placeholder="Lieu">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="history-step">
+                            <div class="step-indicator outdated">2</div>
+                            <div class="step-inputs">
+                                <input type="text" name="step2_label" value="{{ t.step2_label }}"
+                                    class="mini-input label-input" placeholder="Etape 2 (Label)">
+                                <div class="step-details">
+                                    <input type="text" name="step2_date" value="{{ t.step2_date }}"
+                                        class="mini-input date-input" placeholder="Date">
+                                    <input type="text" name="step2_loc" value="{{ t.step2_loc }}"
+                                        class="mini-input loc-input" placeholder="Lieu">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 1 (Oldest) -->
+                        <div class="history-step">
+                            <div class="step-indicator active">1</div>
+                            <div class="step-inputs">
+                                <input type="text" name="step1_label" value="{{ t.step1_label }}"
+                                    class="mini-input label-input" placeholder="Etape 1 (Label)">
+                                <div class="step-details">
+                                    <input type="text" name="step1_date" value="{{ t.step1_date }}"
+                                        class="mini-input date-input" placeholder="Date">
+                                    <input type="text" name="step1_loc" value="{{ t.step1_loc }}"
+                                        class="mini-input loc-input" placeholder="Lieu">
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="date_sent" value="{{ t.date_sent }}">
+                    </div>
+
+                    <!-- Alert Column -->
+                    <div class="alert-section">
+                        <h4 class="section-label">Message d'alerte (Optionnel)</h4>
+                        <textarea name="custom_message" class="clean-textarea"
+                            placeholder="Ex: Livraison retardée...">{{ t.custom_message or '' }}</textarea>
+                    </div>
+
+                </div>
+            </form>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <h3>Aucun colis à gérer</h3>
+                <p>Les nouveaux numéros suivis apparaîtront ici.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Dashboard Specific Styles */
+
+    /* Control Bar */
+    .control-bar {
+        background: white;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+        color: #1e293b;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .subtitle {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+
+    .badge-count {
+        background: #e0f2fe;
+        color: #0284c7;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .main-content-area {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    /* Flash Messages */
+    .flash-messages-area {
+        margin-bottom: 2rem;
+    }
+
+    .custom-alert {
+        background: #dcfce7;
+        color: #166534;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        border: 1px solid #bbf7d0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    /* Tracking Card */
+    .tracking-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #f1f5f9;
+    }
+
+    .tracking-card:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        border-color: #cbd5e1;
+    }
+
+    /* Card Header */
+    .card-header-row {
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        background: #ffffff;
+    }
+
+    .tracking-id a {
+        font-family: 'Courier New', monospace;
+        /* Monospace for codes looks technical */
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        background: #f1f5f9;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+
+    .tracking-id a:hover {
+        background: #e2e8f0;
+    }
+
+    .main-status-inputs {
+        display: flex;
+        gap: 1rem;
+        flex: 1;
+    }
+
+    .input-group {
+        position: relative;
+        flex: 1;
+    }
+
+    .icon-input {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        pointer-events: none;
+    }
+
+    .clean-input {
+        width: 100%;
+        padding: 0.6rem 0.6rem 0.6rem 2.4rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        color: #334155;
+        transition: all 0.2s;
+    }
+
+    .clean-input:focus {
+        background: white;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+
+    .btn-save {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s;
+    }
+
+    .btn-save:hover {
+        background: var(--primary-dark);
+    }
+
+    .card-divider {
+        height: 1px;
+        background: #f1f5f9;
+    }
+
+    /* Card Body */
+    .card-body-row {
+        padding: 1.5rem;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 2rem;
+    }
+
+    .section-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #94a3b8;
+        margin-bottom: 0.8rem;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+    }
+
+    /* History Styles */
+    .history-step {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        align-items: flex-start;
+    }
+
+    .step-indicator {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 6px;
+    }
+
+    .step-indicator.active {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .step-indicator.outdated {
+        background: #f1f5f9;
+        color: #94a3b8;
+    }
+
+    .step-inputs {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .step-details {
+        display: flex;
+        gap: 8px;
+    }
+
+    .mini-input {
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.9rem;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+
+    .mini-input:hover,
+    .mini-input:focus {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        color: #334155;
+        outline: none;
+    }
+
+    .label-input {
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+
+    .dirty-hack-gap {
+        margin-bottom: 50px;
+    }
+
+    /* Alert Area */
+    .clean-textarea {
+        width: 100%;
+        height: 80px;
+        padding: 0.8rem;
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        border-radius: 8px;
+        resize: none;
+        color: #be123c;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .clean-textarea:focus {
+        background: white;
+        border-color: #f43f5e;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem;
+        color: #94a3b8;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .card-header-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .main-status-inputs {
+            flex-direction: column;
+        }
+
+        .card-body-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<script>
+    function updateSliderLabel(input, id) {
+        const val = parseInt(input.value);
+        const labelSpan = document.getElementById('slider-val-' + id);
+
+        const labels = {
+            0: "Non traité",
+            1: "Etape 1 (Prise en charge)",
+            2: "Etape 2 (En transit)",
+            3: "Etape 3 (Arrivée)",
+            4: "Etape 4 (Livraison)"
+        };
+
+        labelSpan.textContent = labels[val];
+
+        // Visual feedback - Change color based on value
+        if (val === 4) {
+            labelSpan.style.backgroundColor = "#16a34a"; // Green
+        } else if (val === 0) {
+            labelSpan.style.backgroundColor = "#94a3b8"; // Grey
+        } else {
+            labelSpan.style.backgroundColor = "#2563eb"; // Blue
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MNCPOSTE - Services de Livraison{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">
+                <!-- Using the uploaded logo if available, or text fallback -->
+                <a href="{{ url_for('home') }}">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}?v=4" alt="MNCPOSTE Logo">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{{ url_for('home') }}">{{ get_text('nav_home') }}</a></li>
+                    <li><a href="{{ url_for('contact') }}">{{ get_text('nav_contact') }}</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions" style="display: flex; gap: 10px; align-items: center;">
+                <!-- Language Switcher -->
+                <div class="lang-dropdown" style="position: relative; margin-right: 15px;">
+                    <button class="lang-btn"
+                        style="background: none; border: 1px solid #e2e8f0; border-radius: 20px; padding: 5px 12px; cursor: pointer; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-globe"></i> {{ session.get('lang', 'en')|upper }} <i
+                            class="fas fa-chevron-down" style="font-size: 0.7em;"></i>
+                    </button>
+                    <div class="lang-menu"
+                        style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; min-width: 120px; z-index: 1000;">
+                        <a href="{{ url_for('set_language', lang_code='fr') }}"
+                            style="display: block; padding: 8px 15px; color: #334155; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9;">Français</a>
+                        <a href="{{ url_for('set_language', lang_code='en') }}"
+                            style="display: block; padding: 8px 15px; color: #334155; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9;">English</a>
+                        <a href="{{ url_for('set_language', lang_code='it') }}"
+                            style="display: block; padding: 8px 15px; color: #334155; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9;">Italiano</a>
+                        <a href="{{ url_for('set_language', lang_code='nl') }}"
+                            style="display: block; padding: 8px 15px; color: #334155; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9;">Nederlands</a>
+                        <a href="{{ url_for('set_language', lang_code='de') }}"
+                            style="display: block; padding: 8px 15px; color: #334155; text-decoration: none; font-size: 0.9rem;">Deutsch</a>
+                    </div>
+                </div>
+
+                {% if current_user.is_authenticated %}
+                <!-- Unified User Dropdown -->
+                <div class="user-dropdown" style="position: relative;">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="user-name">Mon Compte</span>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </button>
+
+                    <div class="user-menu">
+                        <div class="menu-header">
+                            <span class="greeting">Bonjour, {{ current_user.username }}</span>
+                        </div>
+
+                        {% if current_user.is_admin %}
+                        <a href="{{ url_for('dashboard') }}" class="menu-item">
+                            <i class="fas fa-tachometer-alt"></i> Panel Admin
+                        </a>
+                        <a href="{{ url_for('admin_tickets') }}" class="menu-item">
+                            <i class="fas fa-inbox"></i> Gestion Tickets
+                        </a>
+                        <div class="menu-divider"></div>
+                        {% endif %}
+
+                        <a href="{{ url_for('logout') }}" class="menu-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn-account"><i class="fas fa-user"></i> {{
+                    get_text('nav_client') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-messages container">
+            {% for message in messages %}
+            <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Removed -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Language Dropdown
+            const langBtn = document.querySelector('.lang-btn');
+            const langMenu = document.querySelector('.lang-menu');
+
+            if (langBtn && langMenu) {
+                langBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    langMenu.style.display = langMenu.style.display === 'block' ? 'none' : 'block';
+                    // Close user dropdown
+                    document.querySelector('.user-dropdown')?.classList.remove('active');
+                });
+            }
+
+            // User Dropdown
+            const userBtn = document.querySelector('.user-btn');
+            const userDropdown = document.querySelector('.user-dropdown');
+
+            if (userBtn && userDropdown) {
+                userBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('active');
+                    // Close lang menu
+                    if (langMenu) langMenu.style.display = 'none';
+                });
+            }
+
+            // Global Click - Close all
+            document.addEventListener('click', function () {
+                if (langMenu) langMenu.style.display = 'none';
+                if (userDropdown) userDropdown.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

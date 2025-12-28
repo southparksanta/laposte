@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container admin-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Administration des suivis</h1>
+        <a href="{{ url_for('logout') }}" class="btn-primary" style="background: #cc0000;">Déconnexion</a>
+    </div>
+
+    <div class="tracking-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Info</th>
+                    <th>Édition</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in tracking_list %}
+                <tr>
+                    <td><strong>{{ item.code }}</strong><br><small>{{ item.timestamp.strftime('%d/%m/%Y') }}</small>
+                    </td>
+                    <td>
+                        Status: {{ item.status }}<br>
+                        Lieu: {{ item.location }}
+                        {% if item.custom_message %}
+                        <br><span style="color:red;">Message: Oui</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('update_status', id=item.id) }}" method="POST" class="admin-form">
+                            <input type="text" name="status" value="{{ item.status }}"
+                                placeholder="Statut (ex: Arrivé...)" class="form-input">
+                            <input type="text" name="location" value="{{ item.location }}"
+                                placeholder="Lieu (ex: Douala)" class="form-input">
+                            <textarea name="custom_message" placeholder="Message d'alerte rouge..." class="form-input"
+                                rows="2">{{ item.custom_message }}</textarea>
+                            <button type="submit" class="btn-update">Mettre à jour</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">Aucun suivi enregistré.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background-color: #f8fafc; min-height: 100vh; padding: 2rem 0;">
+    <div class="container" style="max-width: 800px;">
+
+        <!-- Header -->
+        <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <a href="{{ url_for('admin_tickets') if current_user.is_admin else url_for('my_tickets') }}"
+                style="color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                <i class="fas fa-arrow-left"></i> {{ get_text('ticket_back') }}
+            </a>
+            <h2 style="margin: 0; color: #1e293b;">{{ ticket.subject }}</h2>
+            <span style="padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; 
+                background: {% if ticket.status == 'Open' %}#dbeafe{% else %}#f1f5f9{% endif %};
+                color: {% if ticket.status == 'Open' %}#1e40af{% else %}#64748b{% endif %};">
+                {{ get_text('status_pending') if ticket.status == 'Open' else ticket.status }}
+            </span>
+        </div>
+
+        <!-- Chat Area -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+
+            <!-- Original Message -->
+            <div style="align-self: flex-start; max-width: 80%;">
+                <div
+                    style="background: white; padding: 1.5rem; border-radius: 12px 12px 12px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                    <div
+                        style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                        <span><strong>{{ ticket.name }}</strong> ({{ get_text('ticket_client') }})</span>
+                        <span>{{ ticket.timestamp.strftime('%d/%m/%Y %H:%M') }}</span>
+                    </div>
+                    <div style="color: #334155; line-height: 1.6;">{{ ticket.message }}</div>
+                </div>
+            </div>
+
+            <!-- Replies -->
+            {% for reply in ticket.replies %}
+            <div
+                style="align-self: {% if reply.sender == 'admin' %}flex-end{% else %}flex-start{% endif %}; max-width: 80%;">
+                <div style="
+                    background: {% if reply.sender == 'admin' %}var(--primary-color){% else %}white{% endif %}; 
+                    color: {% if reply.sender == 'admin' %}white{% else %}#334155{% endif %};
+                    padding: 1.5rem; 
+                    border-radius: {% if reply.sender == 'admin' %}12px 12px 0 12px{% else %}12px 12px 12px 0{% endif %}; 
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+                    border: {% if reply.sender == 'admin' %}none{% else %}1px solid #e2e8f0{% endif %};">
+
+                    <div
+                        style="font-size: 0.85rem; color: {% if reply.sender == 'admin' %}rgba(255,255,255,0.8){% else %}#64748b{% endif %}; margin-bottom: 0.5rem; display: flex; justify-content: space-between; gap: 1rem;">
+                        <span><strong>{% if reply.sender == 'admin' %}Support{% else %}{{ get_text('ticket_you') }}{%
+                                endif %}</strong></span>
+                        <span>{{ reply.timestamp.strftime('%d/%m/%Y %H:%M') }}</span>
+                    </div>
+                    <div style="line-height: 1.6;">{{ reply.message }}</div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- Reply Box -->
+        <div class="card" style="position: sticky; bottom: 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05);">
+            <form method="POST">
+                <div style="display: flex; gap: 1rem;">
+                    <textarea name="message" required placeholder="{{ get_text('ticket_reply_ph') }}" rows="2"
+                        style="flex: 1; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: none;"></textarea>
+                    <button type="submit" class="btn-search"
+                        style="border: none; cursor: pointer; height: auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

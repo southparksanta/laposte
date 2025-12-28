@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <img src="{{ url_for('static', filename='img/logo.png') }}?v=4" alt="MNCPOSTE Logo"
+                style="height: 80px; margin-bottom: 1.5rem; display: block; margin-left: auto; margin-right: auto;">
+            <h1 class="hero-title">{{ get_text('hero_title') }}</h1>
+            <p class="hero-subtitle">{{ get_text('hero_subtitle') }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Search Box (Floating) -->
+<section class="container search-container-wrapper">
+    <div class="search-box">
+        <h2><i class="fas fa-search"></i> {{ get_text('hero_search_title') }}</h2>
+        <form action="{{ url_for('track_post') }}" method="POST">
+            <div class="search-input-group">
+                <input type="text" name="code" class="input-field" placeholder="{{ get_text('hero_placeholder') }}"
+                    required>
+                <button type="submit" class="btn-search">{{ get_text('hero_btn') }}</button>
+            </div>
+        </form>
+        <div class="search-help">
+            <a href="#">{{ get_text('hero_help_find') }}</a>
+            <a href="#">{{ get_text('hero_help_need') }}</a>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section (Grid) -->
+<section class="services-section">
+    <div class="container">
+        <h2 class="section-title">{{ get_text('services_title') }}</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-box-open"></i></div>
+                <h3>{{ get_text('service_send_title') }}</h3>
+                <p>{{ get_text('service_send_desc') }}</p>
+                <a href="#" class="link-arrow">{{ get_text('service_send_btn') }} <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-print"></i></div>
+                <h3>{{ get_text('service_stamp_title') }}</h3>
+                <p>{{ get_text('service_stamp_desc') }}</p>
+                <a href="#" class="link-arrow">{{ get_text('service_stamp_btn') }} <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-map-marker-alt"></i></div>
+                <h3>{{ get_text('service_find_title') }}</h3>
+                <p>{{ get_text('service_find_desc') }}</p>
+                <a href="#" class="link-arrow">{{ get_text('service_find_btn') }} <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="icon-circle"><i class="fas fa-calculator"></i></div>
+                <h3>{{ get_text('service_rate_title') }}</h3>
+                <p>{{ get_text('service_rate_desc') }}</p>
+                <a href="#" class="link-arrow">{{ get_text('service_rate_btn') }} <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Promotional / Illustration Section -->
+<section class="promo-section">
+    <div class="container promo-container">
+        <div class="promo-text">
+            <h2>{{ get_text('promo_title') }}</h2>
+            <p>{{ get_text('promo_desc') }}</p>
+            <div class="app-buttons">
+                <span class="badge-coming-soon"><i class="fas fa-clock"></i> {{ get_text('promo_badge') }}</span>
+            </div>
+        </div>
+        <div class="promo-image">
+            <img src="{{ url_for('static', filename='img/illustration.png') }}" alt="MNCPOSTE Mobile App">
+        </div>
+    </div>
+</section>
+
+<!-- Info Banner -->
+<section class="info-banner">
+    <div class="container">
+        <div class="info-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>{{ get_text('info_secure') }}</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-truck"></i>
+            <span>{{ get_text('info_carbon') }}</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-user-headset"></i>
+            <span>{{ get_text('info_support') }}</span>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,143 @@
+```
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 5rem;">
+
+    <div style="text-align: center; margin-bottom: 4rem;">
+        <div class="contact-header" style="text-align: center; margin-bottom: 3rem;">
+            <h1>{{ get_text('contact_header') }}</h1>
+            <p style="color: #64748b;">{{ get_text('contact_sub') }}</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="{{ url_for('my_tickets') }}" class="btn-account"
+                    style="background-color: var(--primary-light); display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-list-alt"></i> {{ get_text('contact_btn_tickets') }}
+                </a>
+            </div>
+        </div>
+        <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+            {{ get_text('contact_intro') }}
+        </p>
+    </div>
+
+    <!-- Contact Layout -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1100px; margin: 0 auto;">
+
+        <!-- Form Section -->
+        <div class="card"
+            style="padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); background: white;">
+            <h3 style="color: var(--primary-dark); margin-bottom: 1.5rem; font-weight: 700;">{{ get_text('form_title')
+                }}</h3>
+
+            <form action="{{ url_for('contact') }}" method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="name"
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #334155;">{{
+                        get_text('form_name') }}</label>
+                    <input type="text" id="name" name="name" class="input-field" placeholder="Jean Dupont" required
+                        style="width: 100%;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="email"
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #334155;">{{
+                        get_text('form_email') }}</label>
+                    <input type="email" id="email" name="email" class="input-field"
+                        placeholder="jean.dupont@example.com" required style="width: 100%;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="subject"
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #334155;">{{
+                        get_text('form_subject') }}</label>
+                    <select id="subject" name="subject" class="input-field" required
+                        style="width: 100%; cursor: pointer;">
+                        <option value="" disabled selected>{{ get_text('form_subject_ph') }}</option>
+                        <option value="tracking">Suivi de colis</option>
+                        <option value="complaint">Réclamation</option>
+                        <option value="info">Demande d'information</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label for="message"
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #334155;">{{
+                        get_text('form_message') }}</label>
+                    <textarea id="message" name="message" class="input-field" rows="5"
+                        placeholder="{{ get_text('form_message_ph') }}" required
+                        style="width: 100%; font-family: inherit;"></textarea>
+                </div>
+
+                <button type="submit" class="btn-search"
+                    style="width: 100%; padding: 15px; background: var(--primary-color); color: white; box-shadow: 0 4px 15px rgba(0, 75, 155, 0.3);">
+                    {{ get_text('form_btn') }}
+                </button>
+            </form>
+        </div>
+
+        <!-- Info Section -->
+        <div style="padding-top: 1rem;">
+            <div style="margin-bottom: 3rem;">
+                <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-weight: 700;">{{
+                    get_text('other_contact_title') }}
+                </h3>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start;">
+                    <div
+                        style="width: 40px; height: 40px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0 0 0.3rem 0; font-weight: 600;">{{ get_text('phone_title') }}</h4>
+                        <p style="color: #64748b; margin: 0; font-weight: 700;">+44 7441 423612</p>
+                        <p style="color: #94a3b8; font-size: 0.9rem;">{{ get_text('phone_hours') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Teaser -->
+            <div style="background: #f8fafc; padding: 2rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <h4 style="color: #1e293b; margin-bottom: 1rem; font-weight: 700;">{{ get_text('faq_title') }}</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.8rem;">
+                        <a href="#"
+                            style="color: var(--primary-light); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-chevron-right" style="font-size: 0.8rem;"></i> {{ get_text('faq_q1') }}
+                        </a>
+                    </li>
+                    <li style="margin-bottom: 0.8rem;">
+                        <a href="#"
+                            style="color: var(--primary-light); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-chevron-right" style="font-size: 0.8rem;"></i> {{ get_text('faq_q2') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            style="color: var(--primary-light); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-chevron-right" style="font-size: 0.8rem;"></i> {{ get_text('faq_q3') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media (max-width: 768px) {
+        .container {
+            padding-top: 2rem !important;
+        }
+
+        div[style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+        }
+
+        .section-title {
+            font-size: 1.8rem !important;
+        }
+    }
+</style>
+{% endblock %}
