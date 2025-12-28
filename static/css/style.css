@@ -917,6 +917,13 @@ a {
     .user-dropdown {
         margin-left: 5px;
     }
+
+    /* Tracking Page Fixes */
+    .container.mobile-padding {
+        padding-top: 2rem !important;
+        /* Reduce from 100px */
+        padding-bottom: 2rem !important;
+    }
 }
 
 .user-name {
