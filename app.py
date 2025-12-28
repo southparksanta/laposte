@@ -163,6 +163,14 @@ def register():
 def track_post():
     code = request.form.get('code')
     if code:
+        # Normalize to upper case
+        code = code.upper().strip()
+        
+        # Validation: 10 chars, ends with 'M'
+        if len(code) != 10 or not code.endswith('M'):
+            flash('Numéro de suivi invalide. Le format doit être de 10 caractères et se terminer par "M".', 'error')
+            return redirect(url_for('home'))
+            
         return redirect(url_for('track_result', code=code))
     return redirect(url_for('home'))
 

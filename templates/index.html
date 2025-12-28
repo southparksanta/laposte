@@ -20,7 +20,8 @@
         <form action="{{ url_for('track_post') }}" method="POST">
             <div class="search-input-group">
                 <input type="text" name="code" class="input-field" placeholder="{{ get_text('hero_placeholder') }}"
-                    required>
+                    required minlength="10" maxlength="10" pattern=".{9}[mM]"
+                    title="Le numéro doit contenir 10 caractères et finir par M">
                 <button type="submit" class="btn-search">{{ get_text('hero_btn') }}</button>
             </div>
         </form>
